@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Cafe - PVC Card Printing Service</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+        
+        .logo img {
+            width: 60px;
+            margin-right: 15px;
+        }
+        
+        .logo h1 {
+            color: #1a2a6c;
+            font-size: 28px;
+        }
+        
+        .tagline {
+            color: #555;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #f8f9fa;
+            padding: 10px 15px;
+            border-radius: 8px;
+        }
+        
+        .main-content {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .form-section {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            min-width: 300px;
+        }
+        
+        .services-section {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            min-width: 300px;
+        }
+        
+        .section-title {
+            color: #1a2a6c;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #fdbb2d;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+        }
+        
+        .input-group input, .input-group select, .input-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        
+        .input-group input:focus, .input-group select:focus, .input-group textarea:focus {
+            border-color: #1a2a6c;
+            outline: none;
+        }
+        
+        button {
+            background: #1a2a6c;
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            transition: background 0.3s;
+            margin-top: 10px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        button:hover {
+            background: #2a3c9e;
+        }
+        
+        .service-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        .service-card {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .service-card i {
+            font-size: 40px;
+            color: #1a2a6c;
+            margin-bottom: 15px;
+        }
+        
+        .service-card h3 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+        }
+        
+        .testimonials {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        
+        .testimonial {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        .testimonial p {
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+        
+        .testimonial .client {
+            font-weight: 600;
+            color: #1a2a6c;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            border-radius: 10px;
+        }
+        
+        .thank-you {
+            display: none;
+            color: #28a745;
+            font-weight: bold;
+            margin-top: 15px;
+            padding: 10px;
+            background: #f0fff0;
+            border-radius: 5px;
+            text-align: center;
+        }
+        
+        .whatsapp-icon {
+            width: 20px;
+            vertical-align: middle;
+        }
+        
+        .cyber-services {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        
+        .cyber-service {
+            text-align: center;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+        
+        .cyber-service i {
+            font-size: 40px;
+            color: #1a2a6c;
+            margin-bottom: 15px;
+        }
+        
+        .map-container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .map-frame {
+            width: 100%;
+            height: 300px;
+            border-radius: 8px;
+            border: none;
+            margin-top: 20px;
+        }
+        
+        .file-upload-container {
+            border: 2px dashed #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 20px;
+            transition: border 0.3s;
+        }
+        
+        .file-upload-container:hover {
+            border-color: #1a2a6c;
+        }
+        
+        .file-upload-container i {
+            font-size: 40px;
+            color: #1a2a6c;
+            margin-bottom: 10px;
+        }
+        
+        .upload-btn {
+            background: #1a2a6c;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        
+        .file-name {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #555;
+        }
+        
+        .payment-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+        }
+        
+        .payment-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .payment-option {
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .payment-option:hover {
+            border-color: #1a2a6c;
+            background: #f0f8ff;
+        }
+        
+        .payment-option.selected {
+            border-color: #1a2a6c;
+            background: #e6f0ff;
+        }
+        
+        .payment-option i {
+            font-size: 30px;
+            color: #1a2a6c;
+            margin-bottom: 10px;
+        }
+        
+        .pricing-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .pricing-table th, .pricing-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .pricing-table th {
+            background: #f8f9fa;
+        }
+        
+        .pricing-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .service-cards, .testimonial-grid, .services-grid, .payment-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .contact-info {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <img src="https://cdn-icons-png.flaticon.com/512/3049/3049428.png" alt="Cyber Cafe Logo">
+                <h1>Cyber Cafe PVC Printing Services</h1>
+            </div>
+            <p class="tagline">Premium PVC Card Printing & Cyber Cafe Services</p>
+            
+            <div class="contact-info">
+                <div class="contact-item">
+                    <i class="fas fa-phone"></i>
+                    <span>+91 6202819125</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Mujauna Parsa, Saran, Bihar 841219</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-clock"></i>
+                    <span>Open: 8AM - 10PM (Mon-Sat)</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="cyber-services">
+            <h2 class="section-title">Our Cyber Cafe Services</h2>
+            <div class="services-grid">
+                <div class="cyber-service">
+                    <i class="fas fa-desktop"></i>
+                    <h3>Computer Rental</h3>
+                    <p>High-speed internet computers</p>
+                </div>
+                <div class="cyber-service">
+                    <i class="fas fa-print"></i>
+                    <h3>Printing & Scanning</h3>
+                    <p>Color & B/W printing services</p>
+                </div>
+                <div class="cyber-service">
+                    <i class="fas fa-id-card"></i>
+                    <h3>PVC Card Printing</h3>
+                    <p>High-quality PVC card printing</p>
+                </div>
+                <div class="cyber-service">
+                    <i class="fas fa-passport"></i>
+                    <h3>Document Services</h3>
+                    <p>Application forms & documentation</p>
+                </div>
+                <div class="cyber-service">
+                    <i class="fas fa-images"></i>
+                    <h3>Photo Services</h3>
+                    <p>Passport photos & photo printing</p>
+                </div>
+                <div class="cyber-service">
+                    <i class="fas fa-file-contract"></i>
+                    <h3>Xerox & Lamination</h3>
+                    <p>Photocopy & lamination services</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="map-container">
+            <h2 class="section-title">Our Location</h2>
+            <p>Find us easily in Mujauna Parsa, Saran, Bihar</p>
+            <div class="map-frame">
+                <div style="width: 100%; height: 100%; background: #f0f0f0; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                    <div style="text-align: center;">
+                        <i class="fas fa-map-marker-alt" style="font-size: 50px; color: #1a2a6c; margin-bottom: 15px;"></i>
+                        <p>Mujauna Parsa, Saran, Bihar 841219</p>
+                        <p>Near Main Chowk</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="form-section">
+                <h2 class="section-title">Place Your PVC Card Order</h2>
+                <form id="pvcForm">
+                    <div class="input-group">
+                        <label for="customerName">Your Name</label>
+                        <input type="text" id="customerName" name="customerName" placeholder="Enter your full name" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="customerNumber">Mobile Number</label>
+                        <input type="tel" id="customerNumber" name="customerNumber" placeholder="Enter your mobile number" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="cardType">Card Type</label>
+                        <select id="cardType" name="cardType" required>
+                            <option value="">Select card type</option>
+                            <option value="PVC ID Card">PVC ID Card</option>
+                            <option value="Aadhar Card">Aadhar Card</option>
+                            <option value="PAN Card">PAN Card</option>
+                            <option value="Driving License">Driving License</option>
+                            <option value="Student ID">Student ID Card</option>
+                            <option value="Employee ID">Employee ID Card</option>
+                            <option value="Other">Other ID Card</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Upload File (PDF, JPG, PNG)</label>
+                        <div class="file-upload-container">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>Drag & drop your file here or click to browse</p>
+                            <label for="pdfFile" class="upload-btn">Choose File</label>
+                            <input type="file" id="pdfFile" name="pdfFile" accept=".pdf,.jpg,.jpeg,.png" required style="display: none;">
+                            <div id="fileName" class="file-name">No file chosen</div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit">
+                        <img src="https://cdn-icons-png.flaticon.com/512/220/220236.png" class="whatsapp-icon" alt="WhatsApp"> 
+                        Submit & Send via WhatsApp
+                    </button>
+                </form>
+                
+                <p id="thankYouMsg" class="thank-you">Thank you! Your details have been submitted. We will contact you shortly on WhatsApp.</p>
+            </div>
+
+            <div class="services-section">
+                <h2 class="section-title">PVC Card Services</h2>
+                <div class="service-cards">
+                    <div class="service-card">
+                        <i class="fas fa-id-card"></i>
+                        <h3>PVC ID Cards</h3>
+                        <p>High-quality PVC ID cards with custom designs</p>
+                    </div>
+                    <div class="service-card">
+                        <i class="fas fa-address-card"></i>
+                        <h3>Aadhar Card</h3>
+                        <p>PVC-based Aadhar card printing services</p>
+                    </div>
+                    <div class="service-card">
+                        <i class="fas fa-credit-card"></i>
+                        <h3>PAN Card</h3>
+                        <p>Durable PAN card printing on PVC</p>
+                    </div>
+                    <div class="service-card">
+                        <i class="fas fa-car"></i>
+                        <h3>Driving License</h3>
+                        <p>PVC driving license cards with holograms</p>
+                    </div>
+                </div>
+                
+                <h3 class="section-title">Pricing</h3>
+                <table class="pricing-table">
+                    <tr>
+                        <th>Service</th>
+                        <th>Price</th>
+                    </tr>
+                    <tr>
+                        <td>PVC ID Card</td>
+                        <td>₹150/card</td>
+                    </tr>
+                    <tr>
+                        <td>Aadhar Card Print</td>
+                        <td>₹100/card</td>
+                    </tr>
+                    <tr>
+                        <td>PAN Card Print</td>
+                        <td>₹120/card</td>
+                    </tr>
+                    <tr>
+                        <td>Driving License Print</td>
+                        <td>₹130/card</td>
+                    </tr>
+                    <tr>
+                        <td>Lamination</td>
+                        <td>₹30/page</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="payment-section">
+            <h2 class="section-title">Payment Options</h2>
+            <p>We accept multiple payment methods for your convenience</p>
+            
+            <div class="payment-options">
+                <div class="payment-option" onclick="selectPayment(this)">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <h3>Cash Payment</h3>
+                    <p>Pay in person at our cafe</p>
+                </div>
+                <div class="payment-option" onclick="selectPayment(this)">
+                    <i class="fas fa-mobile-alt"></i>
+                    <h3>UPI Payment</h3>
+                    <p>Pay via PhonePe, GPay, etc.</p>
+                </div>
+                <div class="payment-option" onclick="selectPayment(this)">
+                    <i class="fas fa-credit-card"></i>
+                    <h3>Card Payment</h3>
+                    <p>Debit/Credit cards accepted</p>
+                </div>
+            </div>
+            
+            <div id="paymentDetails" style="display: none; margin-top: 20px;">
+                <h3>Payment Instructions</h3>
+                <p>For UPI payments: Send to 6202819125@ybl</p>
+                <p>For card payments: Visit our cafe for secure transaction</p>
+                <p>After payment, share screenshot on WhatsApp for confirmation</p>
+            </div>
+        </div>
+
+        <div class="testimonials">
+            <h2 class="section-title">What Our Customers Say</h2>
+            <div class="testimonial-grid">
+                <div class="testimonial">
+                    <p>"Got my company ID cards printed here. Excellent quality and fast service! Will recommend to others."</p>
+                    <div class="client">- Rajesh Kumar</div>
+                </div>
+                <div class="testimonial">
+                    <p>"Printed my Aadhar card on PVC. Looks very professional and durable. Good customer service."</p>
+                    <div class="client">- Priya Singh</div>
+                </div>
+                <div class="testimonial">
+                    <p>"Best place for PVC card printing in town. Reasonable prices and great service. 5 stars!"</p>
+                    <div class="client">- Amit Sharma</div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Cyber Cafe PVC Printing Services © 2023 | Phone: +91 6202819125</p>
+            <p>Address: Mujauna Parsa, Saran, Bihar 841219 | Open: 8AM - 10PM (Mon-Sat)</p>
+        </footer>
+    </div>
+
+    <script>
+        document.getElementById('pvcForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('customerName').value;
+            const number = document.getElementById('customerNumber').value;
+            const cardType = document.getElementById('cardType').value;
+            const fileInput = document.getElementById('pdfFile');
+            const file = fileInput.files[0];
+
+            // Validation
+            if(!name || name.length < 3) {
+                alert('Please enter your full name (at least 3 characters)');
+                return;
+            }
+            if(!number || number.length < 10) {
+                alert('Please enter a valid mobile number (at least 10 digits)');
+                return;
+            }
+            if(!cardType) {
+                alert('Please select a card type');
+                return;
+            }
+            if(!file) {
+                alert('Please upload a file for printing');
+                return;
+            }
+
+            // WhatsApp message format
+            const message = `Hello Cyber Cafe!%0A%0AMera naam: ${name}%0AMera mobile number: ${number}%0ACard type: ${cardType}%0AMaine PVC card printing ke liye order diya hai.%0AFile: ${file.name}`;
+            const whatsappURL = `https://wa.me/916202819125?text=${message}`;
+            
+            // Open WhatsApp
+            window.open(whatsappURL, '_blank');
+
+            // Show thank you message
+            document.getElementById('thankYouMsg').style.display = 'block';
+
+            // Reset form after 3 seconds
+            setTimeout(() => {
+                document.getElementById('pvcForm').reset();
+                document.getElementById('fileName').textContent = 'No file chosen';
+                document.getElementById('thankYouMsg').style.display = 'none';
+            }, 5000);
+        });
+
+        // File upload display
+        document.getElementById('pdfFile').addEventListener('change', function(e) {
+            const fileName = e.target.files[0].name;
+            document.getElementById('fileName').textContent = fileName;
+        });
+
+        // Drag and drop functionality
+        const fileUploadContainer = document.querySelector('.file-upload-container');
+        fileUploadContainer.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#1a2a6c';
+            this.style.backgroundColor = '#f0f8ff';
+        });
+
+        fileUploadContainer.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#ddd';
+            this.style.backgroundColor = 'transparent';
+        });
+
+        fileUploadContainer.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#ddd';
+            this.style.backgroundColor = 'transparent';
+            
+            const files = e.dataTransfer.files;
+            if (files.length) {
+                document.getElementById('pdfFile').files = files;
+                document.getElementById('fileName').textContent = files[0].name;
+            }
+        });
+
+        // Click on container to trigger file input
+        fileUploadContainer.addEventListener('click', function() {
+            document.getElementById('pdfFile').click();
+        });
+
+        // Payment selection
+        function selectPayment(element) {
+            // Remove selected class from all options
+            document.querySelectorAll('.payment-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked option
+            element.classList.add('selected');
+            
+            // Show payment details
+            document.getElementById('paymentDetails').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
