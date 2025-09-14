@@ -1,10 +1,11 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cyber Cafe - PVC Card Printing Service</title>
+  <title> Maa Gauri Cyber Cafe - PVC Card Printing Service</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   <style>
     *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif}
     body{background:linear-gradient(135deg,#1a2a6c,#b21f1f,#fdbb2d);background-size:400% 400%;animation:gradientBG 15s ease infinite;color:#333;line-height:1.6;min-height:100vh;padding:20px}
@@ -65,7 +66,18 @@
     .loading{display:none;text-align:center;margin-top:15px}
     .loading-spinner{border:3px solid #f3f3f3;border-top:3px solid #1a2a6c;border-radius:50%;width:30px;height:30px;animation:spin 1s linear infinite;margin:0 auto}
     @keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
-    @media(max-width:768px){.main-content{flex-direction:column}.service-cards,.testimonial-grid,.cyber-services .services-grid{grid-template-columns:1fr}.contact-info{flex-direction:column;align-items:center;gap:10px}.floating-whatsapp{bottom:10px;right:10px;width:50px;height:50px;font-size:20px}}
+    
+    /* Payment Section Styles */
+    .payment-section{background:rgba(255,255,255,.95);padding:25px;border-radius:10px;box-shadow:0 5px 15px rgba(0,0,0,.1);margin-bottom:30px;display:none}
+    .payment-options{display:flex;gap:15px;margin-bottom:20px}
+    .payment-option{flex:1;text-align:center;padding:15px;border:2px solid #ddd;border-radius:8px;cursor:pointer;transition:.3s}
+    .payment-option.selected{border-color:#1a2a6c;background:#f0f8ff}
+    .payment-option i{font-size:30px;color:#1a2a6c;margin-bottom:10px}
+    .order-summary{background:#f9f9f9;padding:20px;border-radius:8px;margin-bottom:20px}
+    .summary-item{display:flex;justify-content:space-between;margin-bottom:10px}
+    .summary-total{font-weight:bold;border-top:1px solid #ddd;padding-top:10px;margin-top:10px}
+    
+    @media(max-width:768px){.main-content{flex-direction:column}.service-cards,.testimonial-grid,.cyber-services .services-grid{grid-template-columns:1fr}.contact-info{flex-direction:column;align-items:center;gap:10px}.floating-whatsapp{bottom:10px;right:10px;width:50px;height:50px;font-size:20px}.payment-options{flex-direction:column}}
   </style>
 </head>
 <body>
@@ -76,7 +88,7 @@
     <header>
       <div class="logo">
         <img src="https://cdn-icons-png.flaticon.com/512/3049/3049428.png" alt="Cyber Cafe Logo">
-        <h1>Cyber Cafe PVC Printing Services</h1>
+        <h1>Maa Gauri Cyber Cafe PVC Printing Services</h1>
       </div>
       <p class="tagline">Premium PVC Card Printing & Cyber Cafe Services</p>
       <div class="contact-info">
@@ -104,7 +116,7 @@
       <h2 class="section-title">Our Pricing</h2>
       <table class="pricing-table">
         <tr><th>Service</th><th>Description</th><th>Price</th></tr>
-        <tr><td>PVC ID Card</td><td>Standard ID card with custom design</td><td>₹150/card</td></tr>
+        <tr><td>PVC ID Card</td><td>Standard ID card with custom design</td><td>₹1200/card</td></tr>
         <tr><td>Aadhar Card Print</td><td>PVC-based Aadhar card printing</td><td>₹100/card</td></tr>
         <tr><td>PAN Card Print</td><td>Durable PAN card printing on PVC</td><td>₹120/card</td></tr>
         <tr><td>Driving License</td><td>PVC driving license cards with holograms</td><td>₹130/card</td></tr>
@@ -130,6 +142,38 @@
       </div>
     </div>
 
+    <!-- Payment Section -->
+    <div class="payment-section" id="payment-section">
+      <h2 class="section-title">Payment Options</h2>
+      <div class="payment-options">
+        <div class="payment-option selected" onclick="selectPayment('online')">
+          <i class="fas fa-credit-card"></i>
+          <h3>Pay Online</h3>
+          <p>Secure payment with Razorpay</p>
+        </div>
+        <div class="payment-option" onclick="selectPayment('whatsapp')">
+          <i class="fab fa-whatsapp"></i>
+          <h3>Pay via WhatsApp</h3>
+          <p>Pay later after order confirmation</p>
+        </div>
+      </div>
+      
+      <div class="order-summary">
+        <h3>Order Summary</h3>
+        <div class="summary-item">
+          <span id="summary-card-type">PVC ID Card</span>
+          <span>₹<span id="summary-card-price">150</span> × <span id="summary-quantity">1</span></span>
+        </div>
+        <div class="summary-item summary-total">
+          <span>Total Amount</span>
+          <span>₹<span id="summary-total">150</span></span>
+        </div>
+      </div>
+      
+      <button onclick="processPayment()" id="pay-button"><i class="fas fa-lock"></i> Pay Now</button>
+      <button onclick="backToForm()" style="background:#6c757d;margin-top:10px"><i class="fas fa-arrow-left"></i> Back to Form</button>
+    </div>
+
     <!-- Main Content -->
     <div class="main-content">
       <!-- Order Form -->
@@ -138,20 +182,20 @@
         <form id="pvcForm">
           <div class="input-group"><label for="customerName">Your Name</label><input type="text" id="customerName" required></div>
           <div class="input-group"><label for="customerNumber">Mobile Number</label><input type="tel" id="customerNumber" required></div>
-          <div class="input-group"><label for="customerEmail">Email Address</label><input type="email" id="customerEmail"></div>
+          <div class="input-group"><label for="customerEmail"> Address</label><input type="email" id="customerEmail"></div>
           <div class="input-group"><label for="cardType">Card Type</label>
-            <select id="cardType" required>
-              <option value="">Select card type</option>
-              <option value="PVC ID Card">PVC ID Card (₹150)</option>
-              <option value="Aadhar Card">Aadhar Card (₹100)</option>
-              <option value="PAN Card">PAN Card (₹120)</option>
-              <option value="Driving License">Driving License (₹130)</option>
-              <option value="Student ID">Student ID Card (₹110)</option>
-              <option value="Employee ID">Employee ID Card (₹140)</option>
-              <option value="Other">Other ID Card (Custom Price)</option>
+            <select id="cardType" required onchange="updatePrice()">
+              <option value="" data-price="0">Select card type</option>
+              <option value="PVC ID Card" data-price="150">PVC ID Card (₹150)</option>
+              <option value="Aadhar Card" data-price="100">Aadhar Card (₹100)</option>
+              <option value="PAN Card" data-price="120">PAN Card (₹120)</option>
+              <option value="Driving License" data-price="130">Driving License (₹130)</option>
+              <option value="Student ID" data-price="110">Student ID Card (₹10)</option>
+              <option value="Employee ID" data-price="140">Employee ID Card (₹10)</option>
+              <option value="Other" data-price="0">Other ID Card (Custom Price)</option>
             </select>
           </div>
-          <div class="input-group"><label for="quantity">Quantity</label><input type="number" id="quantity" min="1" value="1" required></div>
+          <div class="input-group"><label for="quantity">Quantity</label><input type="number" id="quantity" min="1" value="1" required onchange="updatePrice()"></div>
           <div class="input-group">
             <label>Upload File (PDF, JPG, PNG)</label>
             <div class="file-upload-container" id="fileUploadContainer">
@@ -163,7 +207,7 @@
             </div>
           </div>
           <div class="input-group"><label for="instructions">Special Instructions (Optional)</label><textarea id="instructions" rows="3"></textarea></div>
-          <button type="submit" id="submitButton"><img src="https://cdn-icons-png.flaticon.com/512/220/220236.png" class="whatsapp-icon"> Submit & Send via WhatsApp</button>
+          <button type="button" onclick="validateForm()" id="submitButton"><i class="fas fa-shopping-cart"></i> Proceed to Payment</button>
           <div class="loading" id="loadingIndicator"><div class="loading-spinner"></div><p>Processing your order...</p></div>
         </form>
         <p id="thankYouMsg" class="thank-you">Thank you! Your details have been submitted. We will contact you shortly on WhatsApp.</p>
@@ -199,26 +243,56 @@
   <div id="notification" class="notification"></div>
 
   <script>
+    // Global variables
+    let selectedPaymentMethod = 'online';
+    let orderAmount = 0;
+    
     // Floating WhatsApp
     function openWhatsApp(){
       const phone="+916202819125";
       const message="Hello, I want to inquire about PVC card printing services.";
       window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`,"_blank");
     }
+    
     // Navigation
     function openNavigation(){
       window.open("https://www.google.com/maps/dir//Mujauna+Parsa,+Saran,+Bihar+841219","_blank");
     }
+    
     // Scroll
     function scrollToSection(id){document.getElementById(id).scrollIntoView({behavior:"smooth"});}
+    
     // Select card
-    function selectCardType(type){document.getElementById("cardType").value=type;scrollToSection("form-section");}
+    function selectCardType(type){
+      document.getElementById("cardType").value=type;
+      updatePrice();
+      scrollToSection("form-section");
+    }
+    
+    // Update price based on selection
+    function updatePrice() {
+      const cardType = document.getElementById("cardType");
+      const quantity = document.getElementById("quantity");
+      const selectedOption = cardType.options[cardType.selectedIndex];
+      const price = parseInt(selectedOption.getAttribute('data-price'));
+      const qty = parseInt(quantity.value);
+      
+      orderAmount = price * qty;
+      
+      // Update summary
+      document.getElementById("summary-card-type").textContent = cardType.value;
+      document.getElementById("summary-card-price").textContent = price;
+      document.getElementById("summary-quantity").textContent = qty;
+      document.getElementById("summary-total").textContent = orderAmount;
+    }
+    
     // File Upload
     const fileInput=document.getElementById("pdfFile");
     const fileName=document.getElementById("fileName");
     const fileUploadContainer=document.getElementById("fileUploadContainer");
     const progressBar=document.querySelector(".progress-bar");
     const fileProgress=document.getElementById("fileProgress");
+    
     fileInput.addEventListener("change",()=>{
       if(fileInput.files.length>0){
         fileName.textContent=fileInput.files[0].name;
@@ -227,6 +301,7 @@
         setTimeout(()=>{fileProgress.style.width="100%";},100);
       }else{fileName.textContent="No file chosen";progressBar.style.display="none";}
     });
+    
     fileUploadContainer.addEventListener("dragover",(e)=>{e.preventDefault();fileUploadContainer.classList.add("dragover");});
     fileUploadContainer.addEventListener("dragleave",()=>{fileUploadContainer.classList.remove("dragover");});
     fileUploadContainer.addEventListener("drop",(e)=>{
@@ -241,9 +316,64 @@
         setTimeout(()=>{fileProgress.style.width="100%";},100);
       }
     });
-    // Form Submission
-    document.getElementById("pvcForm").addEventListener("submit",(e)=>{
-      e.preventDefault();
+    
+    // Validate form before proceeding to payment
+    function validateForm() {
+      const customerName=document.getElementById("customerName").value;
+      const customerNumber=document.getElementById("customerNumber").value;
+      const cardType=document.getElementById("cardType").value;
+      const quantity=document.getElementById("quantity").value;
+      const file=fileInput.files[0];
+      
+      if(!customerName || !customerNumber || !cardType || cardType === "" || !quantity || !file) {
+        showNotification("Please fill all required fields before proceeding.", "error");
+        return;
+      }
+      
+      if(orderAmount <= 0) {
+        showNotification("Please select a valid card type.", "error");
+        return;
+      }
+      
+      // Show payment section
+      document.getElementById("form-section").style.display = "none";
+      document.getElementById("payment-section").style.display = "block";
+      scrollToSection("payment-section");
+    }
+    
+    // Back to form from payment
+    function backToForm() {
+      document.getElementById("payment-section").style.display = "none";
+      document.getElementById("form-section").style.display = "block";
+      scrollToSection("form-section");
+    }
+    
+    // Select payment method
+    function selectPayment(method) {
+      selectedPaymentMethod = method;
+      const options = document.querySelectorAll('.payment-option');
+      options.forEach(opt => opt.classList.remove('selected'));
+      
+      if(method === 'online') {
+        options[0].classList.add('selected');
+        document.getElementById("pay-button").innerHTML = '<i class="fas fa-lock"></i> Pay Now';
+      } else {
+        options[1].classList.add('selected');
+        document.getElementById("pay-button").innerHTML = '<i class="fab fa-whatsapp"></i> Confirm Order';
+      }
+    }
+    
+    // Process payment based on selected method
+    function processPayment() {
+      if(selectedPaymentMethod === 'online') {
+        initiateRazorpayPayment();
+      } else {
+        submitOrderViaWhatsApp();
+      }
+    }
+    
+    // Initiate Razorpay payment
+    function initiateRazorpayPayment() {
       const customerName=document.getElementById("customerName").value;
       const customerNumber=document.getElementById("customerNumber").value;
       const customerEmail=document.getElementById("customerEmail").value;
@@ -251,25 +381,95 @@
       const quantity=document.getElementById("quantity").value;
       const instructions=document.getElementById("instructions").value;
       const file=fileInput.files[0];
-      if(!file){showNotification("Please upload a file before submitting.","error");return;}
-      const message=`New PVC Card Order:\n\nName: ${customerName}\nMobile: ${customerNumber}\nEmail: ${customerEmail}\nCard Type: ${cardType}\nQuantity: ${quantity}\nInstructions: ${instructions}\n\nFile: ${file.name}\n\nLocation: Mujauna Parsa, Saran, Bihar 841219`;
+      
+      // Razorpay API Key (Replace with your actual key)
+      const razorpayKey = "rzp_live_RH7DPL7LtFs1WG";
+      
+      const options = {
+        "key": razorpayKey,
+        "amount": orderAmount * 100, // Amount in paise
+        "currency": "INR",
+        "name": "Cyber Cafe PVC Printing",
+        "description": `Order for ${cardType} (Qty: ${quantity})`,
+        "image": "https://cdn-icons-png.flaticon.com/512/3049/3049428.png",
+        "handler": function(response) {
+          // Payment success handler
+          showNotification("Payment successful! Order confirmed.", "success");
+          
+          // Submit order details via WhatsApp
+          submitOrderViaWhatsApp(response.razorpay_payment_id);
+        },
+        "prefill": {
+          "name": customerName,
+          "email": customerEmail,
+          "contact": customerNumber
+        },
+        "notes": {
+          "card_type": cardType,
+          "quantity": quantity,
+          "instructions": instructions
+        },
+        "theme": {
+          "color": "#1a2a6c"
+        }
+      };
+      
+      const rzp = new Razorpay(options);
+      rzp.open();
+      
+      rzp.on('payment.failed', function(response){
+        showNotification("Payment failed. Please try again.", "error");
+        console.error(response.error);
+      });
+    }
+    
+    // Submit order via WhatsApp
+    function submitOrderViaWhatsApp(paymentId = null) {
+      const customerName=document.getElementById("customerName").value;
+      const customerNumber=document.getElementById("customerNumber").value;
+      const customerEmail=document.getElementById("customerEmail").value;
+      const cardType=document.getElementById("cardType").value;
+      const quantity=document.getElementById("quantity").value;
+      const instructions=document.getElementById("instructions").value;
+      const file=fileInput.files[0];
+      
+      let message=`New PVC Card Order:\n\nName: ${customerName}\nMobile: ${customerNumber}\nEmail: ${customerEmail}\nCard Type: ${cardType}\nQuantity: ${quantity}\nTotal Amount: ₹${orderAmount}`;
+      
+      if(paymentId) {
+        message += `\nPayment ID: ${paymentId}\nPayment Status: Completed`;
+      } else {
+        message += `\nPayment Method: Pay via WhatsApp`;
+      }
+      
+      message += `\nInstructions: ${instructions}\n\nFile: ${file.name}\n\nLocation: Mujauna Parsa, Saran, Bihar 841219`;
+      
       const phone="+916202819125";
       const whatsappURL=`https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-      document.getElementById("submitButton").style.display="none";
+      
+      document.getElementById("pay-button").style.display="none";
       document.getElementById("loadingIndicator").style.display="block";
+      
       setTimeout(()=>{
         document.getElementById("loadingIndicator").style.display="none";
         document.getElementById("thankYouMsg").style.display="block";
         window.open(whatsappURL,"_blank");
+        
+        // Reset form
         document.getElementById("pvcForm").reset();
         fileName.textContent="No file chosen";
         progressBar.style.display="none";
+        
+        // Show form again after success
         setTimeout(()=>{
           document.getElementById("thankYouMsg").style.display="none";
-          document.getElementById("submitButton").style.display="flex";
+          document.getElementById("pay-button").style.display="flex";
+          document.getElementById("payment-section").style.display = "none";
+          document.getElementById("form-section").style.display = "block";
+          scrollToSection("form-section");
         },5000);
       },2000);
-    });
+    }
+    
     // Notifications
     function showNotification(msg,type){
       const notification=document.getElementById("notification");
@@ -277,6 +477,11 @@
       notification.className="notification "+type;
       setTimeout(()=>{notification.className="notification";},3000);
     }
+    
+    // Initialize price on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      updatePrice();
+    });
   </script>
 </body>
 </html>
